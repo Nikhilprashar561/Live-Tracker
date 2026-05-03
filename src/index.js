@@ -9,9 +9,17 @@ async function main(){
 
     const httpServer = http.createServer(app)
 
-    const io = new Server(httpServer);
+    const io = new Server();
     io.attach(httpServer);
+    
+    io.on('connection', (socket) => {
+        socket.on('client:locationUpdates', (data) => {
+        console.log(`Data Aya Kya bro`, data)
 
+        const {latitude, longitude} = data
+        socket.emit('server:locationUpdates', {id:1,latitude, longitude})
+    })
+    })
 
     httpServer.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
